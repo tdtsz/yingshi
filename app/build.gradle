@@ -10,8 +10,6 @@ android {
         applicationId "com.fongmi.android.tv"
         minSdk 21
         targetSdk 28
-        versionCode 204
-        versionName "20230812"
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
@@ -19,6 +17,24 @@ android {
         }
     }
 
+    productFlavors {
+        mobile {
+            dimension "mode"
+            versionCode 204
+            versionName "20230812"
+        }
+        java {
+            dimension "api"
+        }
+        python {
+            dimension "api"
+        }
+        arm64_v8a {
+            dimension "abi"
+            //noinspection ChromeOsAbiSupport
+            ndk { abiFilters "arm64-v8a" }
+        }
+    }
 
     buildFeatures {
         viewBinding true
@@ -26,20 +42,27 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             zipAlignEnabled true
-            shrinkResources false
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            ndk { abiFilters "arm64-v8a" }
         }
     }
 
+    packagingOptions {
+        exclude 'META-INF/beans.xml'
+    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
-    
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            outputFileName = "${variant.productFlavors[0].name}-${variant.productFlavors[1].name}-${variant.productFlavors[2].name}.apk"
+        }
+    }
 
     lint {
         abortOnError false
@@ -52,11 +75,11 @@ dependencies {
     implementation project(':tvbus')
     implementation project(':catvod')
     implementation project(':quickjs')
-//    implementation project(':thunder')
-  //  implementation project(':jianpian')
+    implementation project(':thunder')
+    implementation project(':jianpian')
     implementation project(':forcetech')
     implementation project(':ijkplayer')
-   // implementation project(':pyramid')
+    implementation project(':pyramid')
     implementation 'androidx.media3:media3-database:1.1.0'
     implementation 'androidx.media3:media3-datasource:1.1.0'
     implementation 'androidx.media3:media3-datasource-okhttp:1.1.0'
@@ -86,10 +109,10 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.3.1'
     implementation 'org.nanohttpd:nanohttpd:2.3.1'
     implementation('org.simpleframework:simple-xml:2.7.1') { exclude group: 'stax', module: 'stax-api' exclude group: 'xpp3', module: 'xpp3' }
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
-    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
-    implementation 'com.github.devin1014.DLNA-Cast:dlna-dmc:V1.0.0'
-    implementation('com.journeyapps:zxing-android-embedded:4.3.0') { transitive = false }
+    mobileImplementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+  mobileImplementation 'com.github.chrisbanes:PhotoView:2.3.0'
+    mobileImplementation 'com.github.devin1014.DLNA-Cast:dlna-dmc:V1.0.0'
+    mobileImplementation('com.journeyapps:zxing-android-embedded:4.3.0') { transitive = false }
     annotationProcessor 'androidx.room:room-compiler:2.5.2'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
 }
