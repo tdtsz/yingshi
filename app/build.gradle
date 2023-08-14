@@ -79,7 +79,7 @@ dependencies {
     implementation project(':jianpian')
     implementation project(':forcetech')
     implementation project(':ijkplayer')
-    implementation project(':pyramid')
+    PythonImplementation project(':pyramid')
     implementation 'androidx.media3:media3-database:1.1.0'
     implementation 'androidx.media3:media3-datasource:1.1.0'
     implementation 'androidx.media3:media3-datasource-okhttp:1.1.0'
